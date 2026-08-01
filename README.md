@@ -17,6 +17,9 @@ These mirror the flags of the built-in `caffeinate(8)` command-line tool and can
 | Prevent disk idle sleep | `-m` |
 | Prevent system sleep (on AC power) | `-s` |
 
+### Auto-off timer
+Optionally have Caffeinate turn itself off after a set time. Under **Auto-off after…** in the right-click menu, pick a preset (15 minutes up to 8 hours) or **Custom…** to enter your own duration in minutes; choose **Off** to disable it. When enabled, activating Caffeinate starts a countdown that appears next to the cup in the menu bar (and in the **Active** row of the menu), and Caffeinate deactivates automatically when it reaches zero.
+
 ![cup1](./Images/cup1.png) dark mode Caffeinate active
 ![cup2](./Images/cup2.png) dark mode Caffeinate inactive
 

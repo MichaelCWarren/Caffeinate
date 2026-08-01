@@ -14,6 +14,8 @@ func ==(op1: ConfigData, op2: ConfigData) -> Bool {
         && op1.preventIdleSleep == op2.preventIdleSleep
         && op1.preventDiskIdle == op2.preventDiskIdle
         && op1.preventSystemSleep == op2.preventSystemSleep
+        && op1.timerEnabled == op2.timerEnabled
+        && op1.timerDuration == op2.timerDuration
 }
 
 final class ConfigData: Decodable, Encodable {
@@ -26,6 +28,10 @@ final class ConfigData: Decodable, Encodable {
     var preventIdleSleep :Bool    // -i
     var preventDiskIdle :Bool     // -m
     var preventSystemSleep :Bool  // -s
+    // Optional auto-off countdown: when enabled, activation turns itself off
+    // after timerDuration seconds.
+    var timerEnabled :Bool
+    var timerDuration :TimeInterval // seconds
 
     enum CodingKeys: CodingKey {
         case hardMode
@@ -34,6 +40,8 @@ final class ConfigData: Decodable, Encodable {
         case preventIdleSleep
         case preventDiskIdle
         case preventSystemSleep
+        case timerEnabled
+        case timerDuration
     }
 
     init(from decoder: Decoder) throws {
@@ -45,6 +53,8 @@ final class ConfigData: Decodable, Encodable {
         self.preventIdleSleep = try container.decodeIfPresent(Bool.self, forKey: .preventIdleSleep) ?? true
         self.preventDiskIdle = try container.decodeIfPresent(Bool.self, forKey: .preventDiskIdle) ?? true
         self.preventSystemSleep = try container.decodeIfPresent(Bool.self, forKey: .preventSystemSleep) ?? true
+        self.timerEnabled = try container.decodeIfPresent(Bool.self, forKey: .timerEnabled) ?? false
+        self.timerDuration = try container.decodeIfPresent(TimeInterval.self, forKey: .timerDuration) ?? (60 * 60)
     }
 
     init() {
@@ -54,6 +64,8 @@ final class ConfigData: Decodable, Encodable {
         preventIdleSleep = true
         preventDiskIdle = true
         preventSystemSleep = true
+        timerEnabled = false
+        timerDuration = 60 * 60 // default: 1 hour
     }
 
     init(copy: ConfigData) {
@@ -63,5 +75,7 @@ final class ConfigData: Decodable, Encodable {
         preventIdleSleep = copy.preventIdleSleep
         preventDiskIdle = copy.preventDiskIdle
         preventSystemSleep = copy.preventSystemSleep
+        timerEnabled = copy.timerEnabled
+        timerDuration = copy.timerDuration
     }
 }
