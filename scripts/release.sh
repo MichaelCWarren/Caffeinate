@@ -10,7 +10,9 @@ cd "$(dirname "$0")/.."
 ./scripts/make-app.sh
 
 rm -f Caffeinate.app.zip
-# ditto preserves the bundle structure and resource forks correctly (better
-# than `zip` for .app bundles).
-ditto -c -k --keepParent Caffeinate.app Caffeinate.app.zip
+# Plain zip (-X drops AppleDouble/extra attributes, -y keeps symlinks) so the
+# archive extracts cleanly with any unzipper — including chezmoi's Go extractor,
+# which would otherwise leave stray ._* files inside the bundle. The ad-hoc code
+# signature lives in the Mach-O and _CodeSignature/, so it survives this fine.
+zip -r -X -y Caffeinate.app.zip Caffeinate.app >/dev/null
 echo "Created Caffeinate.app.zip ($(du -h Caffeinate.app.zip | cut -f1))"
